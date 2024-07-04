@@ -6,6 +6,7 @@ model_id = "huggingface-llm-falcon-7b-bf16"
 from sagemaker.jumpstart.utils import get_jumpstart_content_bucket
 
 # Sample training data is available in this bucket
+print(aws_region)
 data_bucket = get_jumpstart_content_bucket(aws_region)
 data_prefix = "training-datasets/sec_data"
 
@@ -23,7 +24,7 @@ my_hyperparameters["epoch"] = "3"
 my_hyperparameters["per_device_train_batch_size"] = "2"
 my_hyperparameters["instruction_tuned"] = "False"
 print(my_hyperparameters)
-Validate hyperparameters
+#Validate hyperparameters
 
 hyperparameters.validate(
     model_id=model_id, model_version=model_version, hyperparameters=my_hyperparameters
@@ -37,9 +38,10 @@ domain_adaptation_estimator = JumpStartEstimator(
     instance_type="ml.p3dn.24xlarge",
 )
 domain_adaptation_estimator.fit(
-    {"train": training_dataset_s3_path, "validation": validation_dataset_s3_path}, logs=True
+    {"train": training_dataset_s3_path, "validation": validation_dataset_s3_path},
+    logs=True
 )
-Extract Training performance metrics. Performance metrics such as training loss and validation accuracy/loss can be accessed through cloudwatch while the training. We can also fetch these metrics and analyze them within the notebook
+#Extract Training performance metrics. Performance metrics such as training loss and validation accuracy/loss can be accessed through cloudwatch while the training. We can also fetch these metrics and analyze them within the notebook
 
 from sagemaker import TrainingJobAnalytics
 
@@ -52,7 +54,7 @@ df.head(10)
 # We first deploy the domain-adaptation fine-tuned model.
 
 domain_adaptation_predictor = domain_adaptation_estimator.deploy()
-Next, we deploy the pre-trained huggingface-llm-falcon-7b-bf16.
+#Next, we deploy the pre-trained huggingface-llm-falcon-7b-bf16.
 
 my_model = JumpStartModel(model_id=model_id)
 pretrained_predictor = my_model.deploy()
